@@ -16,7 +16,8 @@ function Wilder({ _id, city, justAdded, name, skills }) {
       <p>{city}</p>
       <h4>Wild Skills <ShowButton><MinusCircle/></ShowButton></h4>
       <AddSkill 
-        id={_id} 
+        id={_id}
+        skills= {skills}
         onSuccess={(newSkill) => {
           // closeForm();
           // setSuccessMessage(`The skill ${newSkill.title} has been successfully added`);

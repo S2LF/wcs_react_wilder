@@ -5,7 +5,7 @@ const { Label, Input, Form, Button, Error } = require("./styles/form-elements");
 
 
 
-function AddSkill({id}, onSuccess) {
+function AddSkill({id, skills}, onSuccess) {
 
     const [skill, setSkill] = useState("");
     const [error, setError] = useState("");
@@ -14,19 +14,26 @@ function AddSkill({id}, onSuccess) {
     const formSubmission = async (e) => {
         e.preventDefault();
 
+
+        const newSkill = {
+            title: skill,
+            votes: 0,
+        }
+        const newSkills = skills;
+        newSkills.push(newSkill);
+        console.log(newSkills);
         try {
             const result = await Axios.patch(
                 "http://localhost:5000/api/wilders",
                 {
                     _id: id,
-                    // skills: [skill],
-                    skills:[{ title: skill, votes: 0}]
+                    skills:newSkills
                 }
             );
             if(result.data.success){
                 setError('');
                 setSkill('');
-                onSuccess({skills:[{title:skill, votes: 0}]});
+                onSuccess(result.data.result);
             }
         } catch (error){
             if(error.response){

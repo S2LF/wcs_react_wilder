@@ -45,7 +45,7 @@ export const Card = styled.article`
   h3,
   h4 {
     color: ${colors.primary};
-    display: grid;
+    // display: grid;
     grid-template-columns: 1fr auto;
     align-items: start;
     em {

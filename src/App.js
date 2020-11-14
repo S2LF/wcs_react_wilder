@@ -24,7 +24,6 @@ function App() {
     }
   };
 
-
   useEffect(() => {
     fetchWilders();
   }, []);
@@ -44,7 +43,6 @@ function App() {
             {showAddForm ? <MinusCircle/> : <PlusCircle/>}
           </ShowButton>
           {showAddForm ? (
-
             <AddWilder
             onSuccess={(newWilder) => {
               closeForm();

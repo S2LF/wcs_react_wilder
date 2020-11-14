@@ -12,29 +12,34 @@ function useCreateWilder(onSuccess) {
 
     const formSubmission = async (e) => {
         e.preventDefault();
-        try {
-            setDelayed(true);
-            setLoading(true);
-            const result = await axios.post(
-                "http://localhost:5000/api/wilders",
-                {
-                    name,
-                    city,
+        if(name === ""){
+            setError('Le nom du Wilder doit avoir au moins 1 caractère')
+        } else {            
+            try {
+                setDelayed(true);
+                setLoading(true);
+                const result = await axios.post(
+                    "http://localhost:5000/api/wilders",
+                    {
+                        name,
+                        city,
+                    }
+                    );
+                    setLoading(false);
+                    if (result.data.success) {
+                        setError("");
+                        setCity("");
+                        setName("");
+                        console.log(result.data.result);
+                        onSuccess(result.data.result);
+                    }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    setError(error.response.data.message);
+                } else {
+                    setError(error.message);
                 }
-            );
-            setLoading(false);
-            if (result.data.success) {
-            setError("");
-            setCity("");
-            setName("");
-            onSuccess(result.data.result);
-            }
-        } catch (error) {
-            setLoading(false);
-            if (error.response) {
-            setError(error.response.data.message);
-            } else {
-            setError(error.message);
             }
         }
     }

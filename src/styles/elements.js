@@ -54,7 +54,7 @@ export const Card = styled.article`
       border-radius: 4px;
     }
   }
-  p,
+  
   ul {
     color: #757575;
     line-height: 1.5;

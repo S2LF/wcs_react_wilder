@@ -5,7 +5,7 @@ const { Label, Input, Form, Button, Error } = require("./styles/form-elements");
 
 
 
-function AddSkill({id, skills}, onSuccess) {
+function AddSkill({id, skills, onSuccess}) {
 
     const [skill, setSkill] = useState("");
     const [error, setError] = useState("");
@@ -14,32 +14,35 @@ function AddSkill({id, skills}, onSuccess) {
     const formSubmission = async (e) => {
         e.preventDefault();
 
+        if(skill === ''){
+            setError('Le skill doit avoir au moins 1 caractère');
+        } else {
 
-        const newSkill = {
-            title: skill,
+            const newSkill = {
+                title: skill,
             votes: 0,
-        }
-        const newSkills = skills;
-        newSkills.push(newSkill);
-        console.log(newSkills);
-        try {
-            const result = await Axios.patch(
-                "http://localhost:5000/api/wilders",
-                {
-                    _id: id,
-                    skills:newSkills
-                }
-            );
-            if(result.data.success){
-                setError('');
-                setSkill('');
-                onSuccess(result.data.result);
             }
-        } catch (error){
-            if(error.response){
-                setError(error.response.data.message)
-            } else {
-                setError(error.message);
+            const newSkills = skills;
+            newSkills.push(newSkill);
+            try {
+                const result = await Axios.patch(
+                    "http://localhost:5000/api/wilders",
+                    {
+                        _id: id,
+                        skills:newSkills
+                    }
+                );
+                if(result.data.success){
+                    setError('');
+                    setSkill('');
+                    onSuccess(result.data.result, skill);
+                }
+            } catch (error){
+                if(error.response){
+                    setError(error.response.data.message)
+                } else {
+                    setError(error.message);
+                }
             }
         }
     }

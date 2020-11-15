@@ -26,7 +26,7 @@ function AddSkill({id, skills, onSuccess}) {
             newSkills.push(newSkill);
             try {
                 const result = await Axios.patch(
-                    "http://localhost:5000/api/wilders",
+                    "http://localhost:5000/api/wilders/skills",
                     {
                         _id: id,
                         skills:newSkills
@@ -35,7 +35,7 @@ function AddSkill({id, skills, onSuccess}) {
                 if(result.data.success){
                     setError('');
                     setSkill('');
-                    onSuccess(result.data.result, skill);
+                    onSuccess(result.data.result);
                 }
             } catch (error){
                 if(error.response){

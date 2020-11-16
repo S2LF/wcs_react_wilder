@@ -37,6 +37,7 @@ function Skill({_id, title, votes, wilder_id, onSuccess }) {
       if(result.data.success){
         setError('');
         onSuccess(result.data.result)
+        console.log(result.data.result)
       }
     } catch (error){
       if(error.response){

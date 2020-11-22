@@ -1,8 +1,8 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import { CardRow, Container, Footer, Header, ShowButton } from "./styles/elements";
-import { Success } from "./styles/form-elements";
+import { Input, Success } from "./styles/form-elements";
 import Wilder from "./Wilder";
 import AddWilder from "./AddWilder";
 import { ReactComponent as PlusCircle } from "./icons/add-circle.svg";
@@ -50,6 +50,8 @@ function App() {
 
   const [state, dispatch] = useReducer(appReducer, initialState);
 
+  const [filter, setFilter] = useState('');
+
   const fetchWilders = async () => {
     try {
       const result = await axios("http://localhost:5000/api/wilders");
@@ -65,6 +67,14 @@ function App() {
   useEffect(() => {
     fetchWilders();
   }, []);
+
+  function filterName(name){
+    const found = (name.toLowerCase()).includes(filter.toLowerCase());
+    if(found) {
+      return found;
+    }
+  }
+  
 
   return (
     <div className="App">
@@ -89,10 +99,15 @@ function App() {
         </Container>
         <Container>
           <h2>Wilder</h2>
+          <Input
+            placeholder="Filtrer par nom"
+            value={filter}
+            onChange={(e) => {setFilter(e.target.value)}}
+          />
         </Container>
         <CardRow>
           <AppContext.Provider value={dispatch}>
-            {state.wilders.map((wilder) => (
+            {state.wilders.filter(wilder => filter === '' || filterName(wilder.name) ).map((wilder) => (
               <Wilder 
                 key={wilder._id} 
                 {...wilder}

@@ -47,7 +47,6 @@ function Wilder({ _id, city, justAdded, name, skills }) {
             type: 'UPDATE_WILDER',
             updateWilder: result,
           })
-          // skills = ([{ ...newSkill}, ...skills]);
         }}
         />
       ) : (

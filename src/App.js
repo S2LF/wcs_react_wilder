@@ -8,6 +8,7 @@ import AddWilder from "./AddWilder";
 import { ReactComponent as PlusCircle } from "./icons/add-circle.svg";
 import { ReactComponent as MinusCircle } from "./icons/minus-circle.svg";
 import AppContext from "./context/AppContext";
+import Pagination from "react-js-pagination";
 
 const initialState = {
   showAddForm: false,
@@ -74,53 +75,84 @@ function App() {
       return found;
     }
   }
-  
+
+
+const wildersPerPage = 3;
+const [activePage, setCurrentPage] = useState(1);
+
+const indexOfLastWilder = activePage * wildersPerPage;
+const indexOfFirtWilder = indexOfLastWilder - wildersPerPage;
+const currentWilders = state.wilders.slice(indexOfFirtWilder, indexOfLastWilder);
+
+const renderWilders = currentWilders.filter(wilder => filter === '' || filterName(wilder.name) ).map((wild, index) => {
+  return (
+      <Wilder 
+        key={wild._id} 
+        {...wild}
+      />
+    )
+  }
+)
+
+const handlePageChange = ( pageNumber ) => {
+  console.log( `active page is ${pageNumber}`);
+  setCurrentPage(pageNumber);
+}
 
   return (
     <div className="App">
-        <Header>
-          <Container>
-              <h1>Wilders Book</h1>
-          </Container>
-        </Header>
+      <Header>
         <Container>
-          <ShowButton
-            onClick={() => dispatch({ type: "TOGGLE_SHOW_ADD_FORM"})}
-          >
-            {state.showAddForm ? <MinusCircle/> : <PlusCircle/>}
-          </ShowButton>
-          {state.showAddForm ? (
-            <AddWilder
-              onSuccess={(newWilder) => { dispatch({ type: "WILDER_ADDED", newWilder })}}
-            />
-            ) : (
-              state.successMessage !== "" && <Success>{state.successMessage}</Success>
-            )}
+            <h1>Wilders Book</h1>
         </Container>
-        <Container>
-          <h2>Wilder</h2>
-          <Input
-            placeholder="Filtrer par nom"
-            value={filter}
-            onChange={(e) => {setFilter(e.target.value)}}
+      </Header>
+      <Container>
+        <ShowButton
+          onClick={() => dispatch({ type: "TOGGLE_SHOW_ADD_FORM"})}
+        >
+          {state.showAddForm ? <MinusCircle/> : <PlusCircle/>}
+        </ShowButton>
+        {state.showAddForm ? (
+          <AddWilder
+            onSuccess={(newWilder) => { dispatch({ type: "WILDER_ADDED", newWilder })}}
           />
-        </Container>
-        <CardRow>
-          <AppContext.Provider value={dispatch}>
-            {state.wilders.filter(wilder => filter === '' || filterName(wilder.name) ).map((wilder) => (
-              <Wilder 
-                key={wilder._id} 
-                {...wilder}
-              />
-            ))}
-          </AppContext.Provider> 
-        </CardRow>
-        <Container>
-          <Footer>
-            <p>&copy; 2020 Wild Code School</p>
-          </Footer>
-        </Container>
+          ) : (
+            state.successMessage !== "" && <Success>{state.successMessage}</Success>
+          )}
+      </Container>
+      <Container>
+        <h2>Wilder</h2>
+        <Input
+          placeholder="Filtrer par nom"
+          value={filter}
+          onChange={(e) => {setFilter(e.target.value)}}
+        />
+      </Container>
+      <CardRow>
+        <AppContext.Provider value={dispatch}>
+          {/* {state.wilders.filter(wilder => filter === '' || filterName(wilder.name) ).map((wilder) => (
+            <Wilder 
+              key={wilder._id} 
+              {...wilder}
+            />
+          ))} */}
+        {renderWilders}
+        </AppContext.Provider> 
+      </CardRow>
+      <Container>
+          <Pagination
+            activePage={activePage}
+            itemsCountPerPage={3}
+            totalItemsCount={state.wilders.length}
+            pageRangeDisplayed={3}
+            onChange={handlePageChange}
+          />
+        <Footer>
+          <p>&copy; 2020 Wild Code School</p>
+        </Footer>
+      </Container>
     </div>
+    
   );
 }
 

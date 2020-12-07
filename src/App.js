@@ -9,6 +9,7 @@ import { ReactComponent as PlusCircle } from "./icons/add-circle.svg";
 import { ReactComponent as MinusCircle } from "./icons/minus-circle.svg";
 import AppContext from "./context/AppContext";
 import Pagination from "react-js-pagination";
+import usePagination from "./hooks/usePagination";
 
 const initialState = {
   showAddForm: false,
@@ -48,6 +49,15 @@ const appReducer = (state, action) => {
 }
 
 function App() {
+
+  const {
+    next,
+    prev,
+    jump,
+    currentData,
+    currentPage,
+    maxPage
+  } = usePagination(data, itemsPerPage);
 
   const [state, dispatch] = useReducer(appReducer, initialState);
 
